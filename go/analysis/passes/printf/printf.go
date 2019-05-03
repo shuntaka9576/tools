@@ -106,6 +106,9 @@ type printfCaller struct {
 // A function may be a Printf or Print wrapper if its last argument is ...interface{}.
 // If the next-to-last argument is a string, then this may be a Printf wrapper.
 // Otherwise it may be a Print wrapper.
+/*
+mybePrintWrapperは、宣言された関数(decl)がwrapperかどうかを決定する
+*/
 func maybePrintfWrapper(info *types.Info, decl ast.Decl) *printfWrapper {
 	// Look for functions with final argument type ...interface{}.
 	fdecl, ok := decl.(*ast.FuncDecl)
@@ -148,6 +151,7 @@ func maybePrintfWrapper(info *types.Info, decl ast.Decl) *printfWrapper {
 func findPrintfLike(pass *analysis.Pass) (interface{}, error) {
 	// Gather potential wrappers and call graph between them.
 	byObj := make(map[*types.Func]*printfWrapper)
+
 	var wrappers []*printfWrapper
 	for _, file := range pass.Files {
 		for _, decl := range file.Decls {
@@ -157,6 +161,20 @@ func findPrintfLike(pass *analysis.Pass) (interface{}, error) {
 			}
 			byObj[w.obj] = w
 			wrappers = append(wrappers, w)
+			fmt.Printf("======\n")
+			fmt.Printf("file.Name        :%v\n", file.Name)
+			fmt.Printf("w.obj.Name()     :%v\n", w.obj.Name())
+			fmt.Printf("w.obj.Exported() :%v\n", w.obj.Exported())
+			fmt.Printf("w.obj.FullName() :%v\n", w.obj.FullName())
+			fmt.Printf("w.obj.Id()       :%v\n", w.obj.Id())
+			fmt.Printf("w.obj.Parent()   :%v\n", w.obj.Parent())
+			fmt.Printf("w.obj.Pkg()      :%v\n", w.obj.Pkg())
+			fmt.Printf("w.obj.Pos()      :%v\n", w.obj.Pos())
+			fmt.Printf("w.obj.Scope()    :%v\n", w.obj.Scope())
+			fmt.Printf("w.obj.String()   :%v\n", w.obj.String())
+			fmt.Printf("w.obj.Type()     :%v\n", w.obj.Type())
+			fmt.Printf("w                :%v\n", w)
+			fmt.Printf("======\n\n")
 		}
 	}
 
